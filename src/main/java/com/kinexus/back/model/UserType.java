@@ -1,5 +1,5 @@
 package com.kinexus.back.model;
 
 public enum UserType {
-    ADMIN, PACIENTE, PACIENTE_EMPRESA
+    admin, paciente, paciente_empresa
 }

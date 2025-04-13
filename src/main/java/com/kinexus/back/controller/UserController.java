@@ -1,11 +1,13 @@
 package com.kinexus.back.controller;
 
+import com.kinexus.back.dto.CreateUserDTO;
 import com.kinexus.back.model.UserEntity;
 import com.kinexus.back.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -27,7 +29,15 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Crear un usuario", description = "Registra un nuevo usuario en la base de datos.")
-    public UserEntity createUser(@RequestBody UserEntity user) {
+    public UserEntity createUser(@RequestBody CreateUserDTO dto) {
+        UserEntity user = UserEntity.builder()
+                .nombre(dto.nombre)
+                .email(dto.email)
+                .password(dto.password)
+                .tipoUsuario(dto.tipoUsuario)
+                .creadoEn(LocalDateTime.now()) // aseguramos fecha de creación
+                .build();
         return userService.createUser(user);
     }
+
 }
