@@ -22,6 +22,10 @@ public class OpenAPIConfig {
         @Bean
         public OpenAPI customOpenAPI() {
             return new OpenAPI()
+                    .info(new Info()
+                            .title("Kinexus API")
+                            .version("1.0")
+                            .description("API para gestionar usuarios y fichas médicas en Kinexus"))
                     .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                     .components(new Components().addSecuritySchemes("bearerAuth",
                             new SecurityScheme()
