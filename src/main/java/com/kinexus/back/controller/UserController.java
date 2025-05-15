@@ -28,6 +28,12 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtener un usuario por ID", description = "Retorna un usuario específico basado en su ID.")
+    public UserEntity getUserById(@PathVariable UUID id) {
+        return userService.getUserById(id);
+    }
+
     @PostMapping
     @Operation(summary = "Crear un usuario", description = "Registra un nuevo usuario en la base de datos.")
     public UserEntity createUser(@RequestBody CreateUserDTO dto) {
@@ -39,12 +45,6 @@ public class UserController {
                 .creadoEn(LocalDateTime.now()) // aseguramos fecha de creación
                 .build();
         return userService.createUser(user);
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Obtener un usuario por ID", description = "Retorna un usuario específico basado en su ID.")
-    public UserEntity getUserById(@PathVariable UUID id) {
-        return userService.getUserById(id);
     }
 
     @DeleteMapping("/{id}")
