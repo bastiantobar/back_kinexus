@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -27,6 +28,12 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtener un usuario por ID", description = "Retorna un usuario específico basado en su ID.")
+    public UserEntity getUserById(@PathVariable UUID id) {
+        return userService.getUserById(id);
+    }
+
     @PostMapping
     @Operation(summary = "Crear un usuario", description = "Registra un nuevo usuario en la base de datos.")
     public UserEntity createUser(@RequestBody CreateUserDTO dto) {
@@ -40,4 +47,15 @@ public class UserController {
         return userService.createUser(user);
     }
 
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar un usuario", description = "Elimina un usuario específico basado en su ID.")
+    public void deleteUser(@PathVariable UUID id) {
+        userService.deleteUser(id);
+    }
+
+    @PatchMapping("/{id}")
+    @Operation(summary = "Actualizar parcialmente un usuario", description = "Actualiza parcialmente los datos de un usuario basado en su ID.")
+    public UserEntity updateUser(@PathVariable UUID id, @RequestBody CreateUserDTO dto) {
+        return userService.updateUser(id, dto);
+    }
 }
