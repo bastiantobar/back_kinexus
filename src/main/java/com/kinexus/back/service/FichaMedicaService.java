@@ -5,6 +5,8 @@ import com.kinexus.back.model.FichaMedicaEntity;
 import com.kinexus.back.repository.FichaMedicaRepository;
 import com.kinexus.back.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -45,6 +47,9 @@ public class FichaMedicaService {
     }
 
     public void deleteFichaMedica(UUID id) {
+        if (!fichaMedicaRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ficha médica no encontrada");
+        }
         fichaMedicaRepository.deleteById(id);
     }
 }

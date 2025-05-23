@@ -4,6 +4,8 @@ import com.kinexus.back.dto.CreateUserDTO;
 import com.kinexus.back.model.UserEntity;
 import com.kinexus.back.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +31,9 @@ public class UserService {
     }
 
     public void deleteUser(UUID id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado");
+        }
         userRepository.deleteById(id);
     }
 
