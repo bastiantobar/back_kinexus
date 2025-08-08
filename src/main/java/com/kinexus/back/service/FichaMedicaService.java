@@ -4,6 +4,9 @@ import com.kinexus.back.dto.CreateFichaMedicaDTO;
 import com.kinexus.back.model.FichaMedicaEntity;
 import com.kinexus.back.repository.FichaMedicaRepository;
 import com.kinexus.back.repository.UserRepository;
+
+import lombok.Data;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
@@ -11,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.UUID;
 
+@Data
 @Service
 public class FichaMedicaService {
 

@@ -5,7 +5,10 @@ import com.kinexus.back.model.UserEntity;
 import com.kinexus.back.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,38 +27,51 @@ public class UserController {
 
     @GetMapping
     @Operation(summary = "Obtener todos los usuarios", description = "Retorna una lista con todos los usuarios registrados.")
-    public List<UserEntity> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<UserEntity>> getAllUsers() {
+        List<UserEntity> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Obtener un usuario por ID", description = "Retorna un usuario específico basado en su ID.")
-    public UserEntity getUserById(@PathVariable UUID id) {
-        return userService.getUserById(id);
+    public ResponseEntity<UserEntity> getUserById(@PathVariable UUID id) {
+        try {
+            UserEntity user = userService.getUserById(id);
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @PostMapping
     @Operation(summary = "Crear un usuario", description = "Registra un nuevo usuario en la base de datos.")
-    public UserEntity createUser(@RequestBody CreateUserDTO dto) {
+    public ResponseEntity<UserEntity> createUser(@RequestBody CreateUserDTO dto) {
         UserEntity user = UserEntity.builder()
                 .nombre(dto.nombre)
                 .email(dto.email)
                 .password(dto.password)
                 .tipoUsuario(dto.tipoUsuario)
-                .creadoEn(LocalDateTime.now()) // aseguramos fecha de creación
+                .creadoEn(LocalDateTime.now())
                 .build();
-        return userService.createUser(user);
+        UserEntity created = userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar un usuario", description = "Elimina un usuario específico basado en su ID.")
-    public void deleteUser(@PathVariable UUID id) {
+    public ResponseEntity<String> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
+        return ResponseEntity.ok("Usuario eliminado correctamente");
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Actualizar parcialmente un usuario", description = "Actualiza parcialmente los datos de un usuario basado en su ID.")
-    public UserEntity updateUser(@PathVariable UUID id, @RequestBody CreateUserDTO dto) {
-        return userService.updateUser(id, dto);
+    public ResponseEntity<UserEntity> updateUser(@PathVariable UUID id, @RequestBody CreateUserDTO dto) {
+        try {
+            UserEntity updated = userService.updateUser(id, dto);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 }
