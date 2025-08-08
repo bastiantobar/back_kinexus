@@ -31,6 +31,7 @@ public class SecurityConfigMvc {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/api/auth/**",
                                 "/auth/**",
                                 "/debug/**",
                                 "/swagger-ui/**",

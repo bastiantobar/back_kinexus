@@ -47,7 +47,7 @@ public class SecurityConfigWebFlux {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeExchange(exchange -> exchange
-                        .pathMatchers("/auth/**", "/debug/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .pathMatchers("/api/auth/**","/auth/**", "/debug/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth -> oauth.jwt())
