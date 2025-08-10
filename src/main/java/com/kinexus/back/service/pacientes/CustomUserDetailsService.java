@@ -1,4 +1,4 @@
-package com.kinexus.back.service;
+package com.kinexus.back.service.pacientes;
 
 import com.kinexus.back.model.UserEntity;
 import com.kinexus.back.repository.UserRepository;

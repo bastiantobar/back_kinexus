@@ -1,4 +1,4 @@
-package com.kinexus.back.dto;
+package com.kinexus.back.dto.pacientes;
 
 import java.util.UUID;
 
