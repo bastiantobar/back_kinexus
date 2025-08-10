@@ -1,4 +1,4 @@
-package com.kinexus.back.model;
+package com.kinexus.back.model.pacientes;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,15 +22,15 @@ public class FichaMedicaEntity {
     @Schema(description = "ID único de la ficha medica", example = "550e8400-e29b-41d4-a716-446655440000")
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "paciente_id", nullable = false)
     @Schema(description = "ID único del paciente", example = "550e8400-e29b-41d4-a716-446655440000")
     private UUID pacienteId;
 
-    @Column(nullable = false)
+    @Column(name = "descripcion", nullable = false)
     @Schema(description = "Descripción de la ficha medica del paciente", example = "Ficha medica - Tratamiento lesion LCA")
     private String descripcion;
 
-    @Column(nullable = false)
+    @Column(name = "creado_en", nullable = false)
     @Schema(description = "Fecha y hora de creación de la ficha medica", example = "2024-03-23T12:34:56")
     private LocalDateTime creadoEn;
 }

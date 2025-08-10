@@ -1,0 +1,30 @@
+Muchas gracias por la ayuda.
+Necesito crear Modelos, Repository, Service y Controller 
+para los siguientes objetos, si no existen, 
+te pido que me ayudes a actualizar el archivo script_bd.sql
+para actualizar los modelos en la base de datos.
+
+Paciente tiene:
+- Bloque horarios (objeto por definir, por mientras dejar una descripcion) 
+- Listado Reservas o agenda (Strings)
+- Plan asociado
+
+Plan tiene:
+- Asistencia(nose si numero o porcentaje)
+- Numero Sesiones(Numero de sesiones asociadas a este plan)
+- info plan(string)
+- Evaluacion Inicial (string)
+- Evaluacion final (string)
+- Lista sesiones (Objetos)
+- Pagos(PagoEntity)
+
+Sesion tiene:
+- Fecha con hora(LocalDateTime)
+- Asistencia(bool)
+- Cancelado(bool)
+- EvolucionClinica(descripción string)
+
+Historial
+- Lista pagos(PagoEntity)
+- Info basica paciente
+- Lista Planes(fecha, titulo plan,  diagnóstico, Informe de alta por plan)

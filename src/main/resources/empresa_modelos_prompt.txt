@@ -1,0 +1,59 @@
+Bien, tengo una carpeta "empresas" en service, controller, model, repository y dto. Ayudame a crear un sistema de modelos consistentes, para entregar servicios de pausas activas kinesiologicas a empresas. Ayudame creando tambien las tablas de la base de datos para darle mayor consistencia. Para esto te compartire mi vision de lo que debe tener un sistema de modelos de empresa:
+
+Empresa:
+- Nombre
+- ciudad
+- persona a cargo
+- numero de telefono
+- email
+- direccion casa matriz
+- Descripción.
+- Listado planes (puede contratar mas de un plan)
+- listado pagos asociados a un plan
+- Listado sucursales 
+- Listado de todas sesiones (todas las sucursales)
+ 
+
+
+Plan:
+- nombre plan
+- descripcion
+- fecha inicio 
+- fecha termino
+- valor
+- numero de sesiones
+- Listado de asistencias(cada valor entrega un porcentaje de asistencia por sesion ya que en cada sesion van trabajadores de la empresa)
+
+Sesion:
+- Fecha y hora
+- Estado (por realizar, finalizada, cancelada)
+- DescripciónClinica (string)
+- Listado trabajadores (usuarioEmpresa)  
+- Asistencia
+
+UsuarioEmpresa:
+- Nombre
+- Edad
+- Genero
+- Fecha nacimiento 
+- Cargo
+- Discapacidad
+
+
+Sucursal : 
+- numero trabajadores
+- email 
+- telefono
+- direccion
+- Listado sesiones (por sucursal)
+- Listado trabajadores
+
+
+Pago
+Muy parecido al pago de pacientes, pero con id de empresa y plan de empresa
+
+Historial 
+Aca me podrias ayudar, un historial por cada empresa.
+Que este historial contenga las contrataciones de planes,
+otro historial para las sesiones, otro para los pagos, etc.
+Si me propones algo podriamos verlo juntos.
