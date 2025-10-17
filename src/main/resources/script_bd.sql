@@ -1,4 +1,23 @@
+-- Actualiza los paquetes
+sudo apt update
+-- Instala PostgreSQL
+sudo apt install postgresql postgresql-contrib
+-- Inicia el servicio de PostgreSQL
+sudo service postgresql start
+-- Estado
+sudo service postgresql status
 
+-- Entrar a la consola de PostgreSQL
+sudo -i -u postgres
+psql
+
+CREATE DATABASE kinexus_db;
+CREATE USER postgres WITH PASSWORD '1234';
+ALTER ROLE postgres WITH SUPERUSER;
+GRANT ALL PRIVILEGES ON DATABASE kinexus_db TO postgres;
+
+ALTER USER postgres WITH PASSWORD '1234';
+-- ASTA ACA 
 -- Eliminar índices y tablas si existen (en orden de dependencias)
 DROP INDEX IF EXISTS idx_users_email;
 DROP TABLE IF EXISTS bloques_horario CASCADE;
