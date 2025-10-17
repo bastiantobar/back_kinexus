@@ -3,8 +3,12 @@ package com.kinexus.back.model.empresas;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.*;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "planes_empresa")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class PlanEmpresaEntity {
@@ -13,6 +17,7 @@ public class PlanEmpresaEntity {
 
     @ManyToOne
     @JoinColumn(name = "empresa_id")
+    @JsonIgnore
     private EmpresaEntity empresa;
 
     private String nombre;
