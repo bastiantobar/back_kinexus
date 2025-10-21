@@ -22,15 +22,11 @@ public class EmpresaEntity {
     private String direccionCasaMatriz;
     private String descripcion;
 
+    // Relación con planes
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<PlanEmpresaEntity> planes;
 
-    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-    private List<SucursalEntity> sucursales;
-
-    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-    private List<PagoEmpresaEntity> pagos;
-
+    // Relación con historiales
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<HistorialEmpresaEntity> historiales;
 }

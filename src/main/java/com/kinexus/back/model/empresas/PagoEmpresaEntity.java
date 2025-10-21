@@ -16,13 +16,11 @@ public class PagoEmpresaEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "empresa_id")
-    @JsonIgnore
-    private EmpresaEntity empresa;
+    // La relación ahora es solo con el plan
 
     @ManyToOne
     @JoinColumn(name = "plan_id")
+    @JsonIgnore
     private PlanEmpresaEntity plan;
 
     private Double monto;

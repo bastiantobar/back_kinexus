@@ -1,10 +1,10 @@
 package com.kinexus.back.service.empresas;
 
-import com.kinexus.back.model.empresas.EmpresaEntity;
+import com.kinexus.back.model.empresas.PlanEmpresaEntity;
 import com.kinexus.back.model.empresas.SucursalEntity;
 import com.kinexus.back.dto.empresas.CreateSucursalDTO;
 import com.kinexus.back.repository.empresas.SucursalRepository;
-import com.kinexus.back.repository.empresas.EmpresaRepository;
+import com.kinexus.back.repository.empresas.PlanEmpresaRepository;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +13,20 @@ import java.util.UUID;
 @Service
 public class SucursalService {
     private final SucursalRepository sucursalRepository;
-    private final EmpresaRepository empresaRepository;
+    private final PlanEmpresaRepository planRepository;
 
-    public SucursalService(SucursalRepository sucursalRepository, EmpresaRepository empresaRepository) {
+    public SucursalService(SucursalRepository sucursalRepository, PlanEmpresaRepository planRepository) {
         this.sucursalRepository = sucursalRepository;
-        this.empresaRepository = empresaRepository;
+        this.planRepository = planRepository;
     }
 
-    public List<SucursalEntity> getAllSucursales() {
-        return sucursalRepository.findAll();
+
+    public List<SucursalEntity> getSucursalesByPlanId(UUID planId) {
+        return sucursalRepository.findByPlan_Id(planId);
+    }
+
+    public List<SucursalEntity> getSucursalesByEmpresaId(UUID empresaId) {
+        return sucursalRepository.findByPlan_Empresa_Id(empresaId);
     }
 
     public SucursalEntity getSucursalById(UUID id) {
@@ -37,18 +42,18 @@ public class SucursalService {
                 .direccion(dto.direccion)
                 .build();
 
-        // Asociar con empresa si viene empresaId
-        if (dto.empresaId != null && !dto.empresaId.isEmpty()) {
-            UUID empresaId = UUID.fromString(dto.empresaId);
-            EmpresaEntity empresa = empresaRepository.findById(empresaId)
-                    .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
-            sucursal.setEmpresa(empresa);
+        // Asociar con plan si viene planId
+        if (dto.planId != null && !dto.planId.isEmpty()) {
+            UUID planId = UUID.fromString(dto.planId);
+            PlanEmpresaEntity plan = planRepository.findById(planId)
+                    .orElseThrow(() -> new RuntimeException("Plan no encontrado"));
+            sucursal.setPlan(plan);
             SucursalEntity saved = sucursalRepository.save(sucursal);
 
-            // Asegurar que la lista de sucursales de la empresa incluya la nueva sucursal
-            if (empresa.getSucursales() == null) empresa.setSucursales(new ArrayList<>());
-            empresa.getSucursales().add(saved);
-            empresaRepository.save(empresa);
+            // Asegurar que la lista de sucursales del plan incluya la nueva sucursal
+            if (plan.getSucursales() == null) plan.setSucursales(new ArrayList<>());
+            plan.getSucursales().add(saved);
+            planRepository.save(plan);
             return saved;
         }
 
@@ -62,27 +67,27 @@ public class SucursalService {
         sucursal.setTelefono(dto.telefono);
         sucursal.setDireccion(dto.direccion);
 
-        // Si cambia la empresa asociada, actualizar colecciones de ambas
-        if (dto.empresaId != null) {
-            UUID newEmpresaId = UUID.fromString(dto.empresaId);
-            EmpresaEntity newEmpresa = empresaRepository.findById(newEmpresaId)
-                    .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
+        // Si cambia el plan asociado, actualizar colecciones de ambos planes
+        if (dto.planId != null) {
+            UUID newPlanId = UUID.fromString(dto.planId);
+            PlanEmpresaEntity newPlan = planRepository.findById(newPlanId)
+                    .orElseThrow(() -> new RuntimeException("Plan no encontrado"));
 
-            EmpresaEntity oldEmpresa = sucursal.getEmpresa();
-            if (oldEmpresa != null && !oldEmpresa.getId().equals(newEmpresa.getId())) {
-                if (oldEmpresa.getSucursales() != null) {
-                    oldEmpresa.getSucursales().removeIf(s -> s.getId().equals(sucursal.getId()));
-                    empresaRepository.save(oldEmpresa);
+            PlanEmpresaEntity oldPlan = sucursal.getPlan();
+            if (oldPlan != null && !oldPlan.getId().equals(newPlan.getId())) {
+                if (oldPlan.getSucursales() != null) {
+                    oldPlan.getSucursales().removeIf(s -> s.getId().equals(sucursal.getId()));
+                    planRepository.save(oldPlan);
                 }
             }
 
-            sucursal.setEmpresa(newEmpresa);
+            sucursal.setPlan(newPlan);
             SucursalEntity saved = sucursalRepository.save(sucursal);
 
-            if (newEmpresa.getSucursales() == null) newEmpresa.setSucursales(new ArrayList<>());
-            boolean exists = newEmpresa.getSucursales().stream().anyMatch(s -> s.getId().equals(saved.getId()));
-            if (!exists) newEmpresa.getSucursales().add(saved);
-            empresaRepository.save(newEmpresa);
+            if (newPlan.getSucursales() == null) newPlan.setSucursales(new ArrayList<>());
+            boolean exists = newPlan.getSucursales().stream().anyMatch(s -> s.getId().equals(saved.getId()));
+            if (!exists) newPlan.getSucursales().add(saved);
+            planRepository.save(newPlan);
 
             return saved;
         }
@@ -96,11 +101,11 @@ public class SucursalService {
         }
 
         SucursalEntity sucursal = sucursalRepository.findById(id).orElse(null);
-        if (sucursal != null && sucursal.getEmpresa() != null) {
-            EmpresaEntity empresa = sucursal.getEmpresa();
-            if (empresa.getSucursales() != null) {
-                empresa.getSucursales().removeIf(s -> s.getId().equals(id));
-                empresaRepository.save(empresa);
+        if (sucursal != null && sucursal.getPlan() != null) {
+            PlanEmpresaEntity plan = sucursal.getPlan();
+            if (plan.getSucursales() != null) {
+                plan.getSucursales().removeIf(s -> s.getId().equals(id));
+                planRepository.save(plan);
             }
         }
 

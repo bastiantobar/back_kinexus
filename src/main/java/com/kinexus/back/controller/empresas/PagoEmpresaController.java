@@ -21,10 +21,18 @@ public class PagoEmpresaController {
         this.pagoEmpresaService = pagoEmpresaService;
     }
 
-    @GetMapping
-    @Operation(summary = "Obtener todos los pagos de empresa", description = "Retorna una lista con todos los pagos de empresa registrados.")
-    public ResponseEntity<List<PagoEmpresaEntity>> getAllPagosEmpresa() {
-        List<PagoEmpresaEntity> pagos = pagoEmpresaService.getAllPagosEmpresa();
+
+    @GetMapping("/plan/{planId}")
+    @Operation(summary = "Obtener todos los pagos por planId", description = "Retorna una lista con todos los pagos asociados a un plan.")
+    public ResponseEntity<List<PagoEmpresaEntity>> getPagosByPlanId(@PathVariable UUID planId) {
+        List<PagoEmpresaEntity> pagos = pagoEmpresaService.getPagosByPlanId(planId);
+        return ResponseEntity.ok(pagos);
+    }
+
+    @GetMapping("/empresa/{empresaId}")
+    @Operation(summary = "Obtener todos los pagos por empresaId", description = "Retorna una lista con todos los pagos asociados a una empresa (a través de sus planes).")
+    public ResponseEntity<List<PagoEmpresaEntity>> getPagosByEmpresaId(@PathVariable UUID empresaId) {
+        List<PagoEmpresaEntity> pagos = pagoEmpresaService.getPagosByEmpresaId(empresaId);
         return ResponseEntity.ok(pagos);
     }
 

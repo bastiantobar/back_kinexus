@@ -10,30 +10,57 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
-import com.kinexus.back.model.empresas.SesionTrabajadorId;
 
 @RestController
 @RequestMapping("/api/empresas/sesiones-trabajador")
 @Tag(name = "Sesiones Trabajador - Empresa", description = "API para la gestión de sesiones de trabajador de empresa")
 public class SesionTrabajadorController {
+    @GetMapping("/sesion-empresa/{sesionEmpresaId}")
+    @Operation(summary = "Obtener todas las sesiones de trabajador por sesión de empresa", description = "Retorna una lista con todas las sesiones de trabajador asociadas a un sesionEmpresaId.")
+    public ResponseEntity<List<SesionTrabajadorEntity>> getSesionesBySesionEmpresaId(@PathVariable UUID sesionEmpresaId) {
+        List<SesionTrabajadorEntity> sesiones = sesionTrabajadorService.getSesionesBySesionEmpresaId(sesionEmpresaId);
+        return ResponseEntity.ok(sesiones);
+    }
+
+    @GetMapping("/sucursal/{sucursalId}")
+    @Operation(summary = "Obtener todas las sesiones de trabajador por sucursal", description = "Retorna una lista con todas las sesiones de trabajador asociadas a un sucursalId.")
+    public ResponseEntity<List<SesionTrabajadorEntity>> getSesionesBySucursalId(@PathVariable UUID sucursalId) {
+        List<SesionTrabajadorEntity> sesiones = sesionTrabajadorService.getSesionesBySucursalId(sucursalId);
+        return ResponseEntity.ok(sesiones);
+    }
+
+    @GetMapping("/plan/{planId}")
+    @Operation(summary = "Obtener todas las sesiones de trabajador por plan", description = "Retorna una lista con todas las sesiones de trabajador asociadas a un planId.")
+    public ResponseEntity<List<SesionTrabajadorEntity>> getSesionesByPlanId(@PathVariable UUID planId) {
+        List<SesionTrabajadorEntity> sesiones = sesionTrabajadorService.getSesionesByPlanId(planId);
+        return ResponseEntity.ok(sesiones);
+    }
+
+    @GetMapping("/empresa/{empresaId}")
+    @Operation(summary = "Obtener todas las sesiones de trabajador por empresa", description = "Retorna una lista con todas las sesiones de trabajador asociadas a un empresaId.")
+    public ResponseEntity<List<SesionTrabajadorEntity>> getSesionesByEmpresaId(@PathVariable UUID empresaId) {
+        List<SesionTrabajadorEntity> sesiones = sesionTrabajadorService.getSesionesByEmpresaId(empresaId);
+        return ResponseEntity.ok(sesiones);
+    }
     private final SesionTrabajadorService sesionTrabajadorService;
 
     public SesionTrabajadorController(SesionTrabajadorService sesionTrabajadorService) {
         this.sesionTrabajadorService = sesionTrabajadorService;
     }
 
-    @GetMapping
-    @Operation(summary = "Obtener todas las sesiones de trabajador", description = "Retorna una lista con todas las sesiones de trabajador registradas.")
-    public ResponseEntity<List<SesionTrabajadorEntity>> getAllSesionesTrabajador() {
-        List<SesionTrabajadorEntity> sesiones = sesionTrabajadorService.getAllSesionesTrabajador();
+
+
+    @GetMapping("/usuario-empresa/{usuarioEmpresaId}")
+    @Operation(summary = "Obtener todas las sesiones de un usuario de empresa", description = "Retorna una lista con todas las sesiones de trabajador asociadas a un usuarioEmpresaId.")
+    public ResponseEntity<List<SesionTrabajadorEntity>> getSesionesByUsuarioEmpresaId(@PathVariable UUID usuarioEmpresaId) {
+        List<SesionTrabajadorEntity> sesiones = sesionTrabajadorService.getSesionesByUsuarioEmpresaId(usuarioEmpresaId);
         return ResponseEntity.ok(sesiones);
     }
 
-    @GetMapping("/{sesionId}/{usuarioEmpresaId}")
-    @Operation(summary = "Obtener una sesión de trabajador por ID", description = "Retorna una sesión de trabajador específica basada en su ID compuesto.")
-    public ResponseEntity<SesionTrabajadorEntity> getSesionTrabajadorById(@PathVariable UUID sesionId, @PathVariable UUID usuarioEmpresaId) {
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtener una sesión de trabajador por ID", description = "Retorna una sesión de trabajador específica basada en su UUID.")
+    public ResponseEntity<SesionTrabajadorEntity> getSesionTrabajadorById(@PathVariable UUID id) {
         try {
-            SesionTrabajadorId id = new SesionTrabajadorId(sesionId, usuarioEmpresaId);
             SesionTrabajadorEntity sesion = sesionTrabajadorService.getSesionTrabajadorById(id);
             return ResponseEntity.ok(sesion);
         } catch (RuntimeException e) {
@@ -48,11 +75,10 @@ public class SesionTrabajadorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @PatchMapping("/{sesionId}/{usuarioEmpresaId}")
-    @Operation(summary = "Actualizar parcialmente una sesión de trabajador", description = "Actualiza parcialmente los datos de una sesión de trabajador basada en su ID compuesto.")
-    public ResponseEntity<SesionTrabajadorEntity> updateSesionTrabajador(@PathVariable UUID sesionId, @PathVariable UUID usuarioEmpresaId, @RequestBody CreateSesionTrabajadorDTO dto) {
+    @PatchMapping("/{id}")
+    @Operation(summary = "Actualizar parcialmente una sesión de trabajador", description = "Actualiza parcialmente los datos de una sesión de trabajador basada en su UUID.")
+    public ResponseEntity<SesionTrabajadorEntity> updateSesionTrabajador(@PathVariable UUID id, @RequestBody CreateSesionTrabajadorDTO dto) {
         try {
-            SesionTrabajadorId id = new SesionTrabajadorId(sesionId, usuarioEmpresaId);
             SesionTrabajadorEntity updated = sesionTrabajadorService.updateSesionTrabajador(id, dto);
             return ResponseEntity.ok(updated);
         } catch (RuntimeException e) {
@@ -60,10 +86,9 @@ public class SesionTrabajadorController {
         }
     }
 
-    @DeleteMapping("/{sesionId}/{usuarioEmpresaId}")
-    @Operation(summary = "Eliminar una sesión de trabajador", description = "Elimina una sesión de trabajador específica basada en su ID compuesto.")
-    public ResponseEntity<String> deleteSesionTrabajador(@PathVariable UUID sesionId, @PathVariable UUID usuarioEmpresaId) {
-        SesionTrabajadorId id = new SesionTrabajadorId(sesionId, usuarioEmpresaId);
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar una sesión de trabajador", description = "Elimina una sesión de trabajador específica basada en su UUID.")
+    public ResponseEntity<String> deleteSesionTrabajador(@PathVariable UUID id) {
         sesionTrabajadorService.deleteSesionTrabajador(id);
         return ResponseEntity.ok("Sesión de trabajador eliminada correctamente");
     }

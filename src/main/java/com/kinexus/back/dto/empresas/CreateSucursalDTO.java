@@ -1,7 +1,7 @@
 package com.kinexus.back.dto.empresas;
 
 public class CreateSucursalDTO {
-    public String empresaId;
+    public String planId;
     public Integer numeroTrabajadores;
     public String email;
     public String telefono;

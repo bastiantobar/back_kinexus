@@ -15,6 +15,7 @@ public class PlanEmpresaEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    // Relación con empresa
     @ManyToOne
     @JoinColumn(name = "empresa_id")
     @JsonIgnore
@@ -27,9 +28,13 @@ public class PlanEmpresaEntity {
     private Double valor;
     private Integer numeroSesiones;
 
+    // Relación con sucursales asociadas al plan
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
-    private List<SesionEmpresaEntity> sesiones;
+    private List<SucursalEntity> sucursales;
 
+    // Relación con pagos asociados al plan
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     private List<PagoEmpresaEntity> pagos;
+
+    // Las sesiones estarán asociadas a cada sucursal, no al plan.
 }

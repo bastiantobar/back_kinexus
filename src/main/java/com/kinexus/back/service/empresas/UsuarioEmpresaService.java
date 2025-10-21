@@ -1,8 +1,12 @@
 package com.kinexus.back.service.empresas;
 
+import com.kinexus.back.model.empresas.SesionEmpresaEntity;
+import com.kinexus.back.model.empresas.SesionTrabajadorEntity;
 import com.kinexus.back.model.empresas.SucursalEntity;
 import com.kinexus.back.model.empresas.UsuarioEmpresaEntity;
 import com.kinexus.back.dto.empresas.CreateUsuarioEmpresaDTO;
+import com.kinexus.back.repository.empresas.SesionEmpresaRepository;
+import com.kinexus.back.repository.empresas.SesionTrabajadorRepository;
 import com.kinexus.back.repository.empresas.UsuarioEmpresaRepository;
 import com.kinexus.back.repository.empresas.SucursalRepository;
 import org.springframework.stereotype.Service;
@@ -14,14 +18,30 @@ import java.util.UUID;
 public class UsuarioEmpresaService {
     private final UsuarioEmpresaRepository usuarioEmpresaRepository;
     private final SucursalRepository sucursalRepository;
+    private final SesionEmpresaRepository sesionEmpresaRepository;
+    private final SesionTrabajadorRepository sesionTrabajadorRepository;
 
-    public UsuarioEmpresaService(UsuarioEmpresaRepository usuarioEmpresaRepository, SucursalRepository sucursalRepository) {
+    public UsuarioEmpresaService(UsuarioEmpresaRepository usuarioEmpresaRepository,
+                                 SucursalRepository sucursalRepository,
+                                 SesionEmpresaRepository sesionEmpresaRepository,
+                                 SesionTrabajadorRepository sesionTrabajadorRepository) {
         this.usuarioEmpresaRepository = usuarioEmpresaRepository;
         this.sucursalRepository = sucursalRepository;
+        this.sesionEmpresaRepository = sesionEmpresaRepository;
+        this.sesionTrabajadorRepository = sesionTrabajadorRepository;
     }
 
-    public List<UsuarioEmpresaEntity> getAllUsuariosEmpresa() {
-        return usuarioEmpresaRepository.findAll();
+
+    public List<UsuarioEmpresaEntity> getUsuariosBySucursalId(UUID sucursalId) {
+        return usuarioEmpresaRepository.findBySucursal_Id(sucursalId);
+    }
+
+    public List<UsuarioEmpresaEntity> getUsuariosByPlanId(UUID planId) {
+        return usuarioEmpresaRepository.findBySucursal_Plan_Id(planId);
+    }
+
+    public List<UsuarioEmpresaEntity> getUsuariosByEmpresaId(UUID empresaId) {
+        return usuarioEmpresaRepository.findBySucursal_Plan_Empresa_Id(empresaId);
     }
 
     public UsuarioEmpresaEntity getUsuarioEmpresaById(UUID id) {
@@ -49,6 +69,25 @@ public class UsuarioEmpresaService {
             if (sucursal.getTrabajadores() == null) sucursal.setTrabajadores(new ArrayList<>());
             sucursal.getTrabajadores().add(saved);
             sucursalRepository.save(sucursal);
+
+            // Crear SesionTrabajador para cada SesionEmpresa existente en la sucursal
+            java.util.List<SesionEmpresaEntity> sesiones = sesionEmpresaRepository.findBySucursal_Id(sucursal.getId());
+            if (sesiones != null) {
+                if (saved.getAsistencias() == null) saved.setAsistencias(new ArrayList<>());
+        for (SesionEmpresaEntity sesion : sesiones) {
+                    SesionTrabajadorEntity asistencia = SesionTrabajadorEntity.builder()
+                            .sesion(sesion)
+                            .usuarioEmpresa(saved)
+                .asistencia(Boolean.FALSE)
+                            .build();
+                    SesionTrabajadorEntity asistenciaGuardada = sesionTrabajadorRepository.save(asistencia);
+                    // Actualizar colecciones bidireccionales en memoria
+                    saved.getAsistencias().add(asistenciaGuardada);
+                    if (sesion.getAsistencias() == null) sesion.setAsistencias(new ArrayList<>());
+                    sesion.getAsistencias().add(asistenciaGuardada);
+                }
+            }
+
             return saved;
         }
 

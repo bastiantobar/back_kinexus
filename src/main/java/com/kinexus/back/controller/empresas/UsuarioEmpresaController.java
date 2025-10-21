@@ -21,10 +21,25 @@ public class UsuarioEmpresaController {
         this.usuarioEmpresaService = usuarioEmpresaService;
     }
 
-    @GetMapping
-    @Operation(summary = "Obtener todos los usuarios de empresa", description = "Retorna una lista con todos los usuarios de empresa registrados.")
-    public ResponseEntity<List<UsuarioEmpresaEntity>> getAllUsuariosEmpresa() {
-        List<UsuarioEmpresaEntity> usuarios = usuarioEmpresaService.getAllUsuariosEmpresa();
+
+    @GetMapping("/sucursal/{sucursalId}")
+    @Operation(summary = "Obtener todos los usuarios de una sucursal", description = "Retorna una lista con todos los usuarios asociados a una sucursal.")
+    public ResponseEntity<List<UsuarioEmpresaEntity>> getUsuariosBySucursalId(@PathVariable UUID sucursalId) {
+        List<UsuarioEmpresaEntity> usuarios = usuarioEmpresaService.getUsuariosBySucursalId(sucursalId);
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/plan/{planId}")
+    @Operation(summary = "Obtener todos los usuarios de un plan", description = "Retorna una lista con todos los usuarios asociados a un plan (a través de sus sucursales).")
+    public ResponseEntity<List<UsuarioEmpresaEntity>> getUsuariosByPlanId(@PathVariable UUID planId) {
+        List<UsuarioEmpresaEntity> usuarios = usuarioEmpresaService.getUsuariosByPlanId(planId);
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/empresa/{empresaId}")
+    @Operation(summary = "Obtener todos los usuarios de una empresa", description = "Retorna una lista con todos los usuarios asociados a una empresa (a través de sus planes y sucursales).")
+    public ResponseEntity<List<UsuarioEmpresaEntity>> getUsuariosByEmpresaId(@PathVariable UUID empresaId) {
+        List<UsuarioEmpresaEntity> usuarios = usuarioEmpresaService.getUsuariosByEmpresaId(empresaId);
         return ResponseEntity.ok(usuarios);
     }
 

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.*;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -16,6 +17,7 @@ public class UsuarioEmpresaEntity {
 
     @ManyToOne
     @JoinColumn(name = "sucursal_id")
+    @JsonIgnore
     private SucursalEntity sucursal;
 
     private String nombre;
@@ -24,4 +26,7 @@ public class UsuarioEmpresaEntity {
     private Date fechaNacimiento;
     private String cargo;
     private String discapacidad;
+    // Relación con asistencias del trabajador
+    @OneToMany(mappedBy = "usuarioEmpresa", cascade = CascadeType.ALL)
+    private List<SesionTrabajadorEntity> asistencias;
 }
