@@ -15,19 +15,22 @@ public class SucursalEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    // Relación con plan
     @ManyToOne
-    @JoinColumn(name = "empresa_id")
+    @JoinColumn(name = "plan_id")
     @JsonIgnore
-    private EmpresaEntity empresa;
+    private PlanEmpresaEntity plan;
 
     private Integer numeroTrabajadores;
     private String email;
     private String telefono;
     private String direccion;
+    private String responsable;
 
     @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
     private List<UsuarioEmpresaEntity> trabajadores;
 
+    // Las sesiones ahora están asociadas a la sucursal
     @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
     private List<SesionEmpresaEntity> sesiones;
 }

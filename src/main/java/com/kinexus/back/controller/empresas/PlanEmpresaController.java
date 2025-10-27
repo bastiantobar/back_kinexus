@@ -21,10 +21,11 @@ public class PlanEmpresaController {
         this.planEmpresaService = planEmpresaService;
     }
 
-    @GetMapping
-    @Operation(summary = "Obtener todos los planes de empresa", description = "Retorna una lista con todos los planes de empresa registrados.")
-    public ResponseEntity<List<PlanEmpresaEntity>> getAllPlanes() {
-        List<PlanEmpresaEntity> planes = planEmpresaService.getAllPlanes();
+
+    @GetMapping("/empresa/{empresaId}")
+    @Operation(summary = "Obtener todos los planes de una empresa", description = "Retorna una lista con todos los planes asociados a una empresa.")
+    public ResponseEntity<List<PlanEmpresaEntity>> getPlanesByEmpresaId(@PathVariable UUID empresaId) {
+        List<PlanEmpresaEntity> planes = planEmpresaService.getPlanesByEmpresaId(empresaId);
         return ResponseEntity.ok(planes);
     }
 

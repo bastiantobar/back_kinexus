@@ -21,10 +21,18 @@ public class SucursalController {
         this.sucursalService = sucursalService;
     }
 
-    @GetMapping
-    @Operation(summary = "Obtener todas las sucursales", description = "Retorna una lista con todas las sucursales registradas.")
-    public ResponseEntity<List<SucursalEntity>> getAllSucursales() {
-        List<SucursalEntity> sucursales = sucursalService.getAllSucursales();
+
+    @GetMapping("/plan/{planId}")
+    @Operation(summary = "Obtener todas las sucursales por planId", description = "Retorna una lista con todas las sucursales asociadas a un plan.")
+    public ResponseEntity<List<SucursalEntity>> getSucursalesByPlanId(@PathVariable UUID planId) {
+        List<SucursalEntity> sucursales = sucursalService.getSucursalesByPlanId(planId);
+        return ResponseEntity.ok(sucursales);
+    }
+
+    @GetMapping("/empresa/{empresaId}")
+    @Operation(summary = "Obtener todas las sucursales por empresaId", description = "Retorna una lista con todas las sucursales asociadas a una empresa (a través de sus planes).")
+    public ResponseEntity<List<SucursalEntity>> getSucursalesByEmpresaId(@PathVariable UUID empresaId) {
+        List<SucursalEntity> sucursales = sucursalService.getSucursalesByEmpresaId(empresaId);
         return ResponseEntity.ok(sucursales);
     }
 

@@ -1,13 +1,14 @@
 package com.kinexus.back.dto.empresas;
 
-import java.util.Date;
+import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class CreateUsuarioEmpresaDTO {
     public String sucursalId;
     public String nombre;
-    public Integer edad;
     public String genero;
-    public Date fechaNacimiento;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    public LocalDate fechaNacimiento;
     public String cargo;
     public String discapacidad;
 }

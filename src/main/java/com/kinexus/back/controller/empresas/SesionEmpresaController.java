@@ -15,6 +15,26 @@ import java.util.UUID;
 @RequestMapping("/api/empresas/sesiones")
 @Tag(name = "Sesiones - Empresa", description = "API para la gestión de sesiones de empresa")
 public class SesionEmpresaController {
+    @GetMapping("/sucursal/{sucursalId}")
+    @Operation(summary = "Obtener todas las sesiones de empresa por sucursal", description = "Retorna una lista con todas las sesiones de empresa asociadas a un sucursalId.")
+    public ResponseEntity<List<SesionEmpresaEntity>> getSesionesBySucursalId(@PathVariable UUID sucursalId) {
+        List<SesionEmpresaEntity> sesiones = sesionEmpresaService.getSesionesBySucursalId(sucursalId);
+        return ResponseEntity.ok(sesiones);
+    }
+
+    @GetMapping("/plan/{planId}")
+    @Operation(summary = "Obtener todas las sesiones de empresa por plan", description = "Retorna una lista con todas las sesiones de empresa asociadas a un planId.")
+    public ResponseEntity<List<SesionEmpresaEntity>> getSesionesByPlanId(@PathVariable UUID planId) {
+        List<SesionEmpresaEntity> sesiones = sesionEmpresaService.getSesionesByPlanId(planId);
+        return ResponseEntity.ok(sesiones);
+    }
+
+    @GetMapping("/empresa/{empresaId}")
+    @Operation(summary = "Obtener todas las sesiones de empresa por empresa", description = "Retorna una lista con todas las sesiones de empresa asociadas a un empresaId.")
+    public ResponseEntity<List<SesionEmpresaEntity>> getSesionesByEmpresaId(@PathVariable UUID empresaId) {
+        List<SesionEmpresaEntity> sesiones = sesionEmpresaService.getSesionesByEmpresaId(empresaId);
+        return ResponseEntity.ok(sesiones);
+    }
     private final SesionEmpresaService sesionEmpresaService;
 
     public SesionEmpresaController(SesionEmpresaService sesionEmpresaService) {

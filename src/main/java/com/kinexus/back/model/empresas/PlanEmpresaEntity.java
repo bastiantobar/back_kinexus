@@ -2,6 +2,7 @@ package com.kinexus.back.model.empresas;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 import java.util.*;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -15,6 +16,7 @@ public class PlanEmpresaEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    // Relación con empresa
     @ManyToOne
     @JoinColumn(name = "empresa_id")
     @JsonIgnore
@@ -22,14 +24,20 @@ public class PlanEmpresaEntity {
 
     private String nombre;
     private String descripcion;
-    private Date fechaInicio;
-    private Date fechaTermino;
+    @Column(name = "fecha_inicio")
+    private LocalDate fechaInicio;
+    @Column(name = "fecha_termino")
+    private LocalDate fechaTermino;
     private Double valor;
     private Integer numeroSesiones;
 
+    // Relación con sucursales asociadas al plan
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
-    private List<SesionEmpresaEntity> sesiones;
+    private List<SucursalEntity> sucursales;
 
+    // Relación con pagos asociados al plan
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     private List<PagoEmpresaEntity> pagos;
+
+    // Las sesiones estarán asociadas a cada sucursal, no al plan.
 }

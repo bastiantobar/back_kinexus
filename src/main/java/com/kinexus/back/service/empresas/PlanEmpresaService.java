@@ -19,8 +19,9 @@ public class PlanEmpresaService {
         this.empresaRepository = empresaRepository;
     }
 
-    public List<PlanEmpresaEntity> getAllPlanes() {
-        return planEmpresaRepository.findAll();
+
+    public List<PlanEmpresaEntity> getPlanesByEmpresaId(UUID empresaId) {
+        return planEmpresaRepository.findByEmpresa_Id(empresaId);
     }
 
     public PlanEmpresaEntity getPlanById(UUID id) {
