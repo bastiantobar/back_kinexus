@@ -24,7 +24,8 @@ public class SesionEmpresaEntity {
     private LocalDateTime fechaHora;
     private String estado;
     private String descripcionClinica;
-    private Double asistencia;
+    @Builder.Default
+    private Integer asistencia = 0;
 
     @OneToMany(mappedBy = "sesion", cascade = CascadeType.ALL)
     private List<SesionTrabajadorEntity> asistencias;

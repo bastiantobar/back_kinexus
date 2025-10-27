@@ -29,6 +29,8 @@ public class SesionTrabajadorEntity {
     private UsuarioEmpresaEntity usuarioEmpresa;
 
     private Boolean asistencia;
+    @Column(name = "descripcion_clinica")
+    private String descripcionClinica;
 }
 
 

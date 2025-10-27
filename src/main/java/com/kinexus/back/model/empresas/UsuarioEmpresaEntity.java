@@ -2,6 +2,7 @@ package com.kinexus.back.model.empresas;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 import java.util.*;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,9 +22,9 @@ public class UsuarioEmpresaEntity {
     private SucursalEntity sucursal;
 
     private String nombre;
-    private Integer edad;
     private String genero;
-    private Date fechaNacimiento;
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
     private String cargo;
     private String discapacidad;
     // Relación con asistencias del trabajador

@@ -35,11 +35,12 @@ public class SucursalService {
     }
 
     public SucursalEntity createSucursal(CreateSucursalDTO dto) {
-        SucursalEntity sucursal = SucursalEntity.builder()
-                .numeroTrabajadores(dto.numeroTrabajadores)
-                .email(dto.email)
+    SucursalEntity sucursal = SucursalEntity.builder()
+        .numeroTrabajadores(0)
+        .email(dto.email)
                 .telefono(dto.telefono)
                 .direccion(dto.direccion)
+        .responsable(dto.responsable)
                 .build();
 
         // Asociar con plan si viene planId
@@ -62,10 +63,10 @@ public class SucursalService {
 
     public SucursalEntity updateSucursal(UUID id, CreateSucursalDTO dto) {
         SucursalEntity sucursal = getSucursalById(id);
-        sucursal.setNumeroTrabajadores(dto.numeroTrabajadores);
         sucursal.setEmail(dto.email);
         sucursal.setTelefono(dto.telefono);
         sucursal.setDireccion(dto.direccion);
+    sucursal.setResponsable(dto.responsable);
 
         // Si cambia el plan asociado, actualizar colecciones de ambos planes
         if (dto.planId != null) {

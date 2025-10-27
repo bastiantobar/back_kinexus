@@ -1,10 +1,8 @@
 package com.kinexus.back.service.empresas;
 
 import com.kinexus.back.dto.empresas.CreatePagoEmpresaDTO;
-import com.kinexus.back.model.empresas.EmpresaEntity;
 import com.kinexus.back.model.empresas.PagoEmpresaEntity;
 import com.kinexus.back.model.empresas.PlanEmpresaEntity;
-import com.kinexus.back.repository.empresas.EmpresaRepository;
 import com.kinexus.back.repository.empresas.PagoEmpresaRepository;
 import com.kinexus.back.repository.empresas.PlanEmpresaRepository;
 import jakarta.transaction.Transactional;

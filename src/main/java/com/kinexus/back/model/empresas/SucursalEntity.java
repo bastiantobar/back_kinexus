@@ -25,6 +25,7 @@ public class SucursalEntity {
     private String email;
     private String telefono;
     private String direccion;
+    private String responsable;
 
     @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
     private List<UsuarioEmpresaEntity> trabajadores;

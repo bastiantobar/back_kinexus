@@ -52,7 +52,6 @@ public class UsuarioEmpresaService {
     public UsuarioEmpresaEntity createUsuarioEmpresa(CreateUsuarioEmpresaDTO dto) {
         UsuarioEmpresaEntity usuario = UsuarioEmpresaEntity.builder()
                 .nombre(dto.nombre)
-                .edad(dto.edad)
                 .genero(dto.genero)
                 .fechaNacimiento(dto.fechaNacimiento)
                 .cargo(dto.cargo)
@@ -68,6 +67,7 @@ public class UsuarioEmpresaService {
 
             if (sucursal.getTrabajadores() == null) sucursal.setTrabajadores(new ArrayList<>());
             sucursal.getTrabajadores().add(saved);
+            sucursal.setNumeroTrabajadores(sucursal.getTrabajadores().size());
             sucursalRepository.save(sucursal);
 
             // Crear SesionTrabajador para cada SesionEmpresa existente en la sucursal
@@ -75,10 +75,11 @@ public class UsuarioEmpresaService {
             if (sesiones != null) {
                 if (saved.getAsistencias() == null) saved.setAsistencias(new ArrayList<>());
         for (SesionEmpresaEntity sesion : sesiones) {
-                    SesionTrabajadorEntity asistencia = SesionTrabajadorEntity.builder()
+            SesionTrabajadorEntity asistencia = SesionTrabajadorEntity.builder()
                             .sesion(sesion)
                             .usuarioEmpresa(saved)
                 .asistencia(Boolean.FALSE)
+                .descripcionClinica("")
                             .build();
                     SesionTrabajadorEntity asistenciaGuardada = sesionTrabajadorRepository.save(asistencia);
                     // Actualizar colecciones bidireccionales en memoria
@@ -98,7 +99,6 @@ public class UsuarioEmpresaService {
         UsuarioEmpresaEntity usuario = getUsuarioEmpresaById(id);
 
         usuario.setNombre(dto.nombre);
-        usuario.setEdad(dto.edad);
         usuario.setGenero(dto.genero);
         usuario.setFechaNacimiento(dto.fechaNacimiento);
         usuario.setCargo(dto.cargo);
@@ -114,6 +114,7 @@ public class UsuarioEmpresaService {
                 // remover de la antigua
                 if (oldSucursal != null && oldSucursal.getTrabajadores() != null) {
                     oldSucursal.getTrabajadores().removeIf(u -> u.getId().equals(usuario.getId()));
+                    oldSucursal.setNumeroTrabajadores(oldSucursal.getTrabajadores().size());
                     sucursalRepository.save(oldSucursal);
                 }
 
@@ -123,6 +124,7 @@ public class UsuarioEmpresaService {
                 if (newSucursal.getTrabajadores() == null) newSucursal.setTrabajadores(new ArrayList<>());
                 boolean exists = newSucursal.getTrabajadores().stream().anyMatch(u -> u.getId().equals(saved.getId()));
                 if (!exists) newSucursal.getTrabajadores().add(saved);
+                newSucursal.setNumeroTrabajadores(newSucursal.getTrabajadores().size());
                 sucursalRepository.save(newSucursal);
                 return saved;
             }
@@ -141,6 +143,7 @@ public class UsuarioEmpresaService {
             SucursalEntity sucursal = usuario.getSucursal();
             if (sucursal.getTrabajadores() != null) {
                 sucursal.getTrabajadores().removeIf(u -> u.getId().equals(id));
+                sucursal.setNumeroTrabajadores(sucursal.getTrabajadores().size());
                 sucursalRepository.save(sucursal);
             }
         }

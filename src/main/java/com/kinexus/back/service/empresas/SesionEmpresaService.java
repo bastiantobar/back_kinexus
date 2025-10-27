@@ -54,12 +54,12 @@ public class SesionEmpresaService {
     }
 
     public SesionEmpresaEntity createSesionEmpresa(CreateSesionEmpresaDTO dto) {
-        SesionEmpresaEntity sesion = SesionEmpresaEntity.builder()
-                .fechaHora(dto.fechaHora)
-                .estado(dto.estado)
-                .descripcionClinica(dto.descripcionClinica)
-                .asistencia(dto.asistencia)
-                .build();
+    SesionEmpresaEntity sesion = SesionEmpresaEntity.builder()
+        .fechaHora(dto.fechaHora)
+        .estado(dto.estado)
+        .descripcionClinica(dto.descripcionClinica)
+        .asistencia(0)
+        .build();
 
         // Asociar con sucursal si viene sucursalId
         if (dto.sucursalId != null && !dto.sucursalId.isEmpty()) {
@@ -77,10 +77,11 @@ public class SesionEmpresaService {
             if (usuarios != null) {
                 if (saved.getAsistencias() == null) saved.setAsistencias(new java.util.ArrayList<>());
         for (UsuarioEmpresaEntity usuario : usuarios) {
-                    SesionTrabajadorEntity asistencia = SesionTrabajadorEntity.builder()
+            SesionTrabajadorEntity asistencia = SesionTrabajadorEntity.builder()
                             .sesion(saved)
                             .usuarioEmpresa(usuario)
                 .asistencia(Boolean.FALSE)
+                .descripcionClinica("")
                             .build();
                     SesionTrabajadorEntity asistenciaGuardada = sesionTrabajadorRepository.save(asistencia);
 
@@ -99,10 +100,9 @@ public class SesionEmpresaService {
 
     public SesionEmpresaEntity updateSesionEmpresa(UUID id, CreateSesionEmpresaDTO dto) {
         SesionEmpresaEntity sesion = getSesionEmpresaById(id);
-        sesion.setFechaHora(dto.fechaHora);
-        sesion.setEstado(dto.estado);
-        sesion.setDescripcionClinica(dto.descripcionClinica);
-        sesion.setAsistencia(dto.asistencia);
+    sesion.setFechaHora(dto.fechaHora);
+    sesion.setEstado(dto.estado);
+    sesion.setDescripcionClinica(dto.descripcionClinica);
         return sesionEmpresaRepository.save(sesion);
     }
 

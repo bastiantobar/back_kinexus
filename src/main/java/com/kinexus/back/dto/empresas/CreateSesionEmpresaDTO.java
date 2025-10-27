@@ -7,5 +7,4 @@ public class CreateSesionEmpresaDTO {
     public LocalDateTime fechaHora;
     public String estado;
     public String descripcionClinica;
-    public Double asistencia;
 }

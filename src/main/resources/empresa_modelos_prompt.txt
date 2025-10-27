@@ -33,7 +33,6 @@ Sesion:
 
 UsuarioEmpresa:
 - Nombre
-- Edad
 - Genero
 - Fecha nacimiento 
 - Cargo

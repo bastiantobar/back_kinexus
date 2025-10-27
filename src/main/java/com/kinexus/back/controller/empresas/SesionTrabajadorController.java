@@ -86,6 +86,17 @@ public class SesionTrabajadorController {
         }
     }
 
+    @PatchMapping("/{id}/marcar")
+    @Operation(summary = "Marcar asistencia y descripción clínica", description = "Permite marcar la asistencia y actualizar la descripción clínica de una sesión de trabajador por su ID.")
+    public ResponseEntity<SesionTrabajadorEntity> marcarAsistenciaYDescripcion(@PathVariable UUID id, @RequestBody CreateSesionTrabajadorDTO dto) {
+        try {
+            SesionTrabajadorEntity updated = sesionTrabajadorService.updateSesionTrabajador(id, dto);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            throw new org.springframework.web.server.ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar una sesión de trabajador", description = "Elimina una sesión de trabajador específica basada en su UUID.")
     public ResponseEntity<String> deleteSesionTrabajador(@PathVariable UUID id) {

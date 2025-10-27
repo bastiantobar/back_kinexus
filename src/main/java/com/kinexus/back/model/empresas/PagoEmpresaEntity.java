@@ -2,7 +2,7 @@ package com.kinexus.back.model.empresas;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -26,5 +26,6 @@ public class PagoEmpresaEntity {
     private Double monto;
     private String metodoPago;
     private String estadoPago;
-    private LocalDateTime fechaPago;
+    @Column(name = "fecha_pago")
+    private LocalDate fechaPago;
 }

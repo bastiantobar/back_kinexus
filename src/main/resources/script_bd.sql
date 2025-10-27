@@ -153,6 +153,7 @@ CREATE TABLE sucursales (
     email VARCHAR(255),
     telefono VARCHAR(30),
     direccion VARCHAR(255),
+    responsable VARCHAR(255),
     FOREIGN KEY (empresa_id) REFERENCES empresas(id) ON DELETE CASCADE
 );
 
@@ -161,7 +162,6 @@ CREATE TABLE usuarios_empresa (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     sucursal_id UUID NOT NULL,
     nombre VARCHAR(255) NOT NULL,
-    edad INTEGER,
     genero VARCHAR(20),
     fecha_nacimiento DATE,
     cargo VARCHAR(100),
@@ -177,7 +177,7 @@ CREATE TABLE sesiones_empresa (
     fecha_hora TIMESTAMP NOT NULL,
     estado VARCHAR(20) CHECK (estado IN ('por_realizar', 'finalizada', 'cancelada')) NOT NULL,
     descripcion_clinica TEXT,
-    asistencia NUMERIC(5,2), -- porcentaje de asistencia
+    asistencia INTEGER DEFAULT 0, -- conteo de asistentes
     FOREIGN KEY (plan_id) REFERENCES planes_empresa(id) ON DELETE CASCADE,
     FOREIGN KEY (sucursal_id) REFERENCES sucursales(id) ON DELETE CASCADE
 );
@@ -200,7 +200,7 @@ CREATE TABLE pagos_empresa (
     monto DECIMAL(10,2) NOT NULL,
     metodo_pago VARCHAR(20) CHECK (metodo_pago IN ('efectivo', 'tarjeta', 'transferencia')) NOT NULL,
     estado_pago VARCHAR(20) CHECK (estado_pago IN ('pendiente', 'completado', 'fallido')) NOT NULL DEFAULT 'pendiente',
-    fecha_pago TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_pago DATE DEFAULT CURRENT_DATE,
     FOREIGN KEY (empresa_id) REFERENCES empresas(id) ON DELETE CASCADE,
     FOREIGN KEY (plan_id) REFERENCES planes_empresa(id) ON DELETE CASCADE
 );

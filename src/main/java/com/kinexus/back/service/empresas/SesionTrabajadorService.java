@@ -70,9 +70,18 @@ public class SesionTrabajadorService {
         .sesion(sesionEmpresa)
         .usuarioEmpresa(usuario)
         .asistencia(dto.asistencia != null ? dto.asistencia : Boolean.FALSE)
+        .descripcionClinica(dto.descripcionClinica != null ? dto.descripcionClinica : "")
         .build();
 
         SesionTrabajadorEntity saved = sesionTrabajadorRepository.save(nueva);
+
+        // actualizar contador de asistencia en la sesión empresa si corresponde
+        if (Boolean.TRUE.equals(saved.getAsistencia())) {
+            Integer count = sesionEmpresa.getAsistencia();
+            if (count == null) count = 0;
+            sesionEmpresa.setAsistencia(count + 1);
+            sesionEmpresaRepository.save(sesionEmpresa);
+        }
 
         // actualizar colecciones en memoria
         if (usuario.getAsistencias() == null) usuario.setAsistencias(new java.util.ArrayList<>());
@@ -85,14 +94,42 @@ public class SesionTrabajadorService {
 
     public SesionTrabajadorEntity updateSesionTrabajador(UUID id, CreateSesionTrabajadorDTO dto) {
         SesionTrabajadorEntity sesion = getSesionTrabajadorById(id);
-        sesion.setAsistencia(dto.asistencia);
+        Boolean prev = sesion.getAsistencia() != null ? sesion.getAsistencia() : Boolean.FALSE;
+
+        if (dto.asistencia != null) {
+            // ajustar contador de asistencia en la sesión
+            SesionEmpresaEntity sesionEmpresa = sesion.getSesion();
+            Integer count = sesionEmpresa.getAsistencia();
+            if (count == null) count = 0;
+            if (Boolean.TRUE.equals(dto.asistencia) && !Boolean.TRUE.equals(prev)) {
+                sesionEmpresa.setAsistencia(count + 1);
+                sesionEmpresaRepository.save(sesionEmpresa);
+            } else if (Boolean.FALSE.equals(dto.asistencia) && Boolean.TRUE.equals(prev)) {
+                sesionEmpresa.setAsistencia(Math.max(0, count - 1));
+                sesionEmpresaRepository.save(sesionEmpresa);
+            }
+            sesion.setAsistencia(dto.asistencia);
+        }
+
+        if (dto.descripcionClinica != null) {
+            sesion.setDescripcionClinica(dto.descripcionClinica);
+        }
         return sesionTrabajadorRepository.save(sesion);
     }
 
     public void deleteSesionTrabajador(UUID id) {
-        if (!sesionTrabajadorRepository.existsById(id)) {
-            throw new RuntimeException("SesionTrabajador no encontrada");
+        SesionTrabajadorEntity sesion = sesionTrabajadorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("SesionTrabajador no encontrada"));
+
+        // si tenía asistencia true, disminuir el contador
+        if (Boolean.TRUE.equals(sesion.getAsistencia())) {
+            SesionEmpresaEntity sesionEmpresa = sesion.getSesion();
+            Integer count = sesionEmpresa.getAsistencia();
+            if (count == null) count = 0;
+            sesionEmpresa.setAsistencia(Math.max(0, count - 1));
+            sesionEmpresaRepository.save(sesionEmpresa);
         }
+
         sesionTrabajadorRepository.deleteById(id);
     }
 }
